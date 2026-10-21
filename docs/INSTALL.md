@@ -47,6 +47,24 @@ same way (`--skill jira-groom`, and so on) or leave `--skill` off to install the
 plugin above is still the fuller route: it also gives you the dedicated agent and puts the command on
 the PATH for you. Update the command with `uv tool upgrade jira-agent`.
 
+## Operating systems
+
+Tested on every change (GitHub Actions) on Linux, macOS and Windows, Python 3.11 and 3.13.
+
+| | macOS | Windows | Linux |
+|---|---|---|---|
+| Needs | `uv`, Python 3.11+ | `uv`, Python 3.11+ | `uv`, Python 3.11+ |
+| Token storage | Keychain | Credential Manager | Secret Service (GNOME Keyring, KWallet) |
+| Launcher | `bin/jira-agent` | `bin/jira-agent.cmd` | `bin/jira-agent` |
+
+- **No desktop keyring** (headless Linux, containers, some WSL setups): set `JIRA_AGENT_SECRETS=file`
+  to keep the token in `~/.jira-agent/secrets.json` (owner-only on Linux and macOS; on Windows the
+  user profile's access rules apply). It is weaker than an OS keyring, so use a short-lived token.
+- **Windows:** file permission modes are not enforced the way they are on Linux and macOS; the
+  files live in your user profile, which other users cannot read by default. Use a terminal where
+  `uv` is on the PATH.
+- All files are read and written as UTF-8, so ticket text in any language is safe.
+
 ## Install for everyone who uses a repository
 
 Declare the marketplace and plugin in the repository's Claude settings so teammates are offered it

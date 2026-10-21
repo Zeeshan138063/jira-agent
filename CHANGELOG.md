@@ -14,6 +14,8 @@ All notable changes. Versions follow semantic versioning; the plugin version liv
   labelled pairs, Jira clone/duplicate links and generated reworded duplicates. See docs/DUPLICATES.md.
 - `jira` entry skill: `npx skills add <repo-url> --skill jira` installs it in any skills-aware agent;
   it installs the CLI with `uv tool install` on first use. `jira-agent --version` added.
+- Cross-platform: UTF-8 file handling everywhere, `JIRA_AGENT_SECRETS=file` fallback for machines
+  without a keyring, Windows launcher, exclusive loopback port on Windows, CI on Linux/macOS/Windows.
 - Decisions recorded: each person syncs their own knowledge base, visibility is whatever Jira shows
   that person, sized for about 10,000 tickets per project. Embeddings wait for the evaluation data.
 
