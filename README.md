@@ -12,7 +12,7 @@ that want it.
 |---|---|
 | `agents/jira-agent.md` | Orchestrator: session start-up, routing, and the safety rules |
 | `jira-setup` | Pick, create or clone a saved profile (site URL, projects, KB path, sync and write mode) |
-| `jira-auth` | Browser sign-in (API token page by default, OAuth optional); credentials kept in the macOS Keychain |
+| `jira-auth` | Browser sign-in (API token page by default, OAuth optional); credentials kept in the system keychain |
 | `jira-api` | Read, search, create, update, transition, comment and link issues; endpoint catalog |
 | `jira-groom` | Groom an existing ticket, or create a new one through guided questions |
 | `jira-knowledge` | Build and refresh the ticket knowledge base (markdown + SQLite FTS) |
@@ -22,7 +22,11 @@ that want it.
 ## Requirements
 
 - Claude Code and [`uv`](https://docs.astral.sh/uv/) (uv also provides Python 3.11+)
-- macOS (tokens use the system Keychain via `keyring`)
+- macOS, Windows or Linux. Tokens use the system keychain via `keyring`:
+  - macOS: Keychain
+  - Windows: Credential Manager
+  - Linux: Secret Service (GNOME Keyring, KWallet); without one, set `JIRA_AGENT_SECRETS=file`
+    (see [docs/INSTALL.md](docs/INSTALL.md#operating-systems))
 - A Jira Cloud site and an Atlassian account that can use it. Nothing to register: the sign-in page
   walks you through creating an API token.
 
@@ -71,7 +75,7 @@ Exit codes: `0` ok, `2` bad input, `3` sign-in needed, `4` preview awaiting appr
 |---|---|
 | Profiles | `~/.jira-agent/profiles/<name>.json` (no secrets), `~/.jira-agent/state.json` |
 | Team preset (optional) | `jira-agent.preset.json` in the working folder, `~/.jira-agent/preset.json`, or `$JIRA_AGENT_PRESET` |
-| API token / OAuth tokens, OAuth client secret | macOS Keychain, service `jira-agent` |
+| API token / OAuth tokens, OAuth client secret | System keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service), service `jira-agent` |
 | Audit log of writes | `~/.jira-agent/audit.log` (action, target, field names only) |
 | Endpoint catalog | `~/.jira-agent/catalog/jira-v3.json` |
 | Custom grooming templates | `~/.jira-agent/templates/<name>/<Type>.md` |
@@ -106,7 +110,7 @@ Set `JIRA_AGENT_HOME` to relocate `~/.jira-agent`.
 Version 0.9.0. Covered by tests against mocked Atlassian responses (`uv run pytest`) and verified against a
 real Jira site: sign-in, reads, the knowledge base, and live writes (create, edit, comment, transition,
 link, epic plans) including through a real Claude session. Not yet verified: the optional OAuth sign-in,
-operating systems other than macOS, and wide use by non-technical teammates. See
+real-keychain sign-in on Windows and Linux (the code and tests run on all three in CI), and wide use by non-technical teammates. See
 [CHANGELOG.md](CHANGELOG.md).
 
 ## Development
