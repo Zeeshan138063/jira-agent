@@ -37,7 +37,7 @@ seconds once, with network access) and then walks you through connecting Jira
 ## Install with one command (any agent that supports skills)
 
 ```
-npx skills add <repo-url> --skill jira
+npx skills add https://github.com/Zeeshan138063/jira-agent --skill jira
 ```
 
 This copies the `jira` skill into your agent (Claude Code, Cursor, Codex and others). On first use the

@@ -16,10 +16,10 @@ command is not found, install it with `uv` (https://docs.astral.sh/uv/) and tell
 are doing:
 
 ```
-uv tool install git+<repo-url>
+uv tool install git+https://github.com/Zeeshan138063/jira-agent
 ```
 
-`<repo-url>` is the repository this skill was installed from. If `uv` is missing, ask the user to
+If this skill came from a fork, use that fork's URL instead. If `uv` is missing, ask the user to
 install it first; do not install system tools yourself. To update later:
 `uv tool upgrade jira-agent`.
 

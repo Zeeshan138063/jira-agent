@@ -44,7 +44,7 @@ On first use the agent will:
 
 After that, a new session picks up your last profile and only syncs what changed.
 
-Or, in any agent that supports skills: `npx skills add <repo-url> --skill jira` (see docs/INSTALL.md).
+Or, in any agent that supports skills: `npx skills add https://github.com/Zeeshan138063/jira-agent --skill jira` (see docs/INSTALL.md).
 
 ## CLI
 
