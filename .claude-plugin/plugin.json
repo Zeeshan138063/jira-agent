@@ -1,0 +1,24 @@
+{
+  "name": "jira-agent",
+  "version": "0.9.0",
+  "description": "Create, groom and de-duplicate Jira tickets, turn requirements into epics and stories, and keep a searchable knowledge base of existing tickets. Talks to Jira Cloud directly (no MCP); sign in with an Atlassian API token from a local browser page.",
+  "author": {
+    "name": "Zeeshan Muhammad"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jira",
+    "tickets",
+    "grooming",
+    "duplicates",
+    "knowledge-base",
+    "product-management"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "agents": [
+    "./agents/jira-agent.md"
+  ],
+  "skills": "./skills",
+  "homepage": "https://github.com/Zeeshan138063/jira-agent",
+  "repository": "https://github.com/Zeeshan138063/jira-agent"
+}

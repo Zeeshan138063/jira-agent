@@ -1,0 +1,31 @@
+{
+  "project": "PROJ",
+  "epic": {
+    "id": "e1",
+    "summary": "Let customers reschedule deliveries in the app",
+    "description": "Customers phone support to move deliveries, which costs staff time.\n\n## Goal\n- Self-service rescheduling from the mobile app\n\n## Out of scope\n- Bulk reschedules for business accounts",
+    "labels": ["mobile"]
+  },
+  "stories": [
+    {
+      "id": "s1",
+      "summary": "Show a reschedule button on scheduled deliveries",
+      "description": "As a customer I want to reschedule so that I avoid calling support.\n\n## Acceptance criteria\n- Given a scheduled delivery, when I open it, then I see a Reschedule button.",
+      "subtasks": [
+        {"id": "s1-api", "summary": "Expose reschedule eligibility in the API"},
+        {"id": "s1-ui", "summary": "Add the button and its states to the app"}
+      ]
+    },
+    {
+      "id": "s2",
+      "summary": "Pick a new delivery slot and confirm the change",
+      "description": "Customers choose from available slots.\n\n## Acceptance criteria\n- Given I am eligible, when I pick a slot, then my delivery moves to it.",
+      "links": [{"type": "Blocks", "to": "s3"}]
+    },
+    {
+      "id": "s3",
+      "summary": "Send a confirmation after rescheduling",
+      "description": "Notify the customer.\n\n## Acceptance criteria\n- Given a completed reschedule, then a confirmation email is sent."
+    }
+  ]
+}

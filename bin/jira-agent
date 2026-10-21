@@ -1,0 +1,5 @@
+#!/bin/sh
+# Launcher so the agent can run `jira-agent <command>` without spelling out the plugin path.
+# `uv` creates and updates the plugin's own environment on first use.
+root="$(cd "$(dirname "$0")/.." && pwd -P)"
+exec uv run --quiet --project "$root" jira-agent "$@"

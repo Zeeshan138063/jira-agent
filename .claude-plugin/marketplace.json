@@ -1,0 +1,24 @@
+{
+  "name": "team-plugins",
+  "owner": {
+    "name": "Zeeshan Muhammad"
+  },
+  "metadata": {
+    "description": "Jira ticket creation, grooming and duplicate-check plugin."
+  },
+  "plugins": [
+    {
+      "name": "jira-agent",
+      "source": "./",
+      "description": "Create, groom and de-duplicate Jira tickets, plan epics and stories, and keep a searchable knowledge base of existing tickets.",
+      "version": "0.9.0",
+      "category": "productivity",
+      "keywords": [
+        "jira",
+        "tickets",
+        "grooming",
+        "duplicates"
+      ]
+    }
+  ]
+}
