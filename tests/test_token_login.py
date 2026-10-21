@@ -157,12 +157,15 @@ def test_wrong_secret_path_and_foreign_host_and_foreign_origin_are_refused():
 
 def test_oversized_body_is_rejected():
     server, out, thread = start(ok_verify)
-    resp = local(
-        f"{server.url}connect",
-        method="POST",
-        data={"email": "user@example.com", "token": "a" * 20000},
-    )
-    assert resp.status_code == 400
+    try:
+        resp = local(
+            f"{server.url}connect",
+            method="POST",
+            data={"email": "user@example.com", "token": "a" * 20000},
+        )
+        assert resp.status_code == 400
+    except httpx.TransportError:
+        pass  # the server may close the connection before the client finishes sending (Windows)
     server.result = {"stop": True}
     thread.join(5)
 
