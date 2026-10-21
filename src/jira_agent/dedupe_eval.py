@@ -94,7 +94,7 @@ def pairs_from_links(tickets: list[dict]) -> list[Pair]:
 
 def load_labels(path: Path) -> list[Pair]:
     try:
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:
         return []
     pairs = []
@@ -118,7 +118,7 @@ def save_labels(path: Path, pairs: list[Pair], note: str = "") -> None:
         {"a": p.a, "b": p.b, "label": p.label, "source": p.source, "note": p.note}
         for p in sorted(pairs, key=lambda p: (p.a, p.b))
     ]
-    path.write_text(json.dumps({"note": note, "pairs": rows}, indent=1) + "\n")
+    path.write_text(json.dumps({"note": note, "pairs": rows}, indent=1) + "\n", encoding="utf-8")
 
 
 def _norm_title(summary: str | None) -> str:

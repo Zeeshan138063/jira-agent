@@ -61,11 +61,11 @@ def write_ticket(root: Path, t: dict, site_url: str) -> bool:
     path = ticket_path(root, t["project"], t["key"])
     text = render_ticket(t, site_url)
     try:
-        if path.read_text() == text:
+        if path.read_text(encoding="utf-8") == text:
             return False
     except FileNotFoundError:
         path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text)
+    path.write_text(text, encoding="utf-8")
     return True
 
 

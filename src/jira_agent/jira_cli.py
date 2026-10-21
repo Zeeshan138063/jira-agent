@@ -26,7 +26,7 @@ def _kv(pairs: list[str] | None) -> dict:
 
 def _text(inline: str | None, file: str | None) -> str | None:
     if file:
-        return Path(file).expanduser().read_text()
+        return Path(file).expanduser().read_text(encoding="utf-8")
     return inline
 
 

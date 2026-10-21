@@ -94,7 +94,7 @@ def refresh_catalog(home: Path | None = None, http: httpx.Client | None = None) 
         raise ValueError("spec contained no matching endpoints")
     path = catalog_path(home)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(entries, indent=1))
+    path.write_text(json.dumps(entries, indent=1), encoding="utf-8")
     return path
 
 
@@ -102,7 +102,7 @@ def load_catalog(home: Path | None = None) -> list[dict]:
     path = catalog_path(home)
     if path.exists():
         try:
-            return json.loads(path.read_text())
+            return json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             pass
     return builtin_catalog()

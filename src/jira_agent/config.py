@@ -110,7 +110,7 @@ class ProfileStore:
         private_dir(path.parent)
         fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
         try:
-            with os.fdopen(fd, "w") as f:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
             os.chmod(tmp, 0o600)
             os.replace(tmp, path)
@@ -120,7 +120,7 @@ class ProfileStore:
 
     def _read_state(self) -> dict:
         try:
-            return json.loads(self.state_file.read_text())
+            return json.loads(self.state_file.read_text(encoding="utf-8"))
         except (FileNotFoundError, json.JSONDecodeError):
             return {}
 
@@ -142,7 +142,7 @@ class ProfileStore:
     def get(self, name: str) -> Profile:
         path = self._path(name)
         try:
-            return Profile.model_validate_json(path.read_text())
+            return Profile.model_validate_json(path.read_text(encoding="utf-8"))
         except FileNotFoundError:
             raise ProfileError(f"no such profile: {name}") from None
         except ValueError as e:

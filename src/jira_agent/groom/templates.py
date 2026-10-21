@@ -127,5 +127,9 @@ def load_template(issue_type: str, name: str = "default", home: Path | None = No
     if home and name != "default":
         custom = home / "templates" / name / f"{canonical}.md"
         if custom.is_file():
-            return {"type": canonical, "source": str(custom), "body": custom.read_text()}
+            return {
+                "type": canonical,
+                "source": str(custom),
+                "body": custom.read_text(encoding="utf-8"),
+            }
     return {"type": canonical, "source": "builtin", "body": TEMPLATES[canonical]}

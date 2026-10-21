@@ -86,7 +86,8 @@ def run_eval(args, store: ProfileStore, secrets, http) -> int:
                 out.write_text(
                     json.dumps(
                         {"label_with": "duplicate | related | different", "pairs": found}, indent=1
-                    )
+                    ),
+                    encoding="utf-8",
                 )
                 _emit(
                     {

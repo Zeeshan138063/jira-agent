@@ -14,7 +14,7 @@ import httpx
 from jira_agent import __version__, usage
 from jira_agent.auth import credentials, oauth, token_login
 from jira_agent.auth.callback_server import CallbackError
-from jira_agent.auth.keychain import KeychainStore, SecretStoreError, token_key
+from jira_agent.auth.keychain import SecretStoreError, default_store, token_key
 from jira_agent.config import (
     IssueDefaults,
     KbMode,
@@ -272,23 +272,23 @@ def run(argv: list[str], store: ProfileStore | None = None, secrets=None, http=N
     store = store or ProfileStore()
     try:
         if args.command == "auth":
-            return run_auth(args, store, secrets or KeychainStore(), http)
+            return run_auth(args, store, secrets or default_store(), http)
         if args.command == "eval":
-            return run_eval(args, store, secrets or KeychainStore(), http)
+            return run_eval(args, store, secrets or default_store(), http)
         if args.command == "usage":
             return run_usage(args, store.home)
         if args.command == "session":
-            return run_session(args, store, secrets or KeychainStore(), http)
+            return run_session(args, store, secrets or default_store(), http)
         if args.command == "structure":
-            return run_structure(args, store, secrets or KeychainStore(), http)
+            return run_structure(args, store, secrets or default_store(), http)
         if args.command == "groom":
-            return run_groom(args, store, secrets or KeychainStore(), http)
+            return run_groom(args, store, secrets or default_store(), http)
         if args.command == "dedupe":
-            return run_dedupe(args, store, secrets or KeychainStore(), http)
+            return run_dedupe(args, store, secrets or default_store(), http)
         if args.command == "kb":
-            return run_kb(args, store, secrets or KeychainStore(), http)
+            return run_kb(args, store, secrets or default_store(), http)
         if args.command == "jira":
-            return run_jira(args, store, secrets or KeychainStore(), http)
+            return run_jira(args, store, secrets or default_store(), http)
         match args.action:
             case "list":
                 last = store.last_used_name()
@@ -332,13 +332,15 @@ def run(argv: list[str], store: ProfileStore | None = None, secrets=None, http=N
             case "export":
                 preset = export_preset(store.get(args.name))
                 if args.output:
-                    Path(args.output).expanduser().write_text(json.dumps(preset, indent=2) + "\n")
+                    Path(args.output).expanduser().write_text(
+                        json.dumps(preset, indent=2) + "\n", encoding="utf-8"
+                    )
                     _emit({"ok": True, "written": args.output})
                 else:
                     _emit(preset)
             case "import":
                 try:
-                    data = json.loads(Path(args.file).expanduser().read_text())
+                    data = json.loads(Path(args.file).expanduser().read_text(encoding="utf-8"))
                 except (OSError, json.JSONDecodeError) as e:
                     raise ProfileError(f"cannot read the preset file: {e}") from None
                 profile = import_preset(data, args.name, args.kb_path)
@@ -387,6 +389,9 @@ def run_usage(args, home) -> int:
 
 def main() -> int:
     """Run the CLI and record how much output it handed back (command name and sizes only)."""
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     argv = sys.argv[1:]
     name = usage.command_name(argv)
     out, err = usage.CountingStream(sys.stdout), usage.CountingStream(sys.stderr)

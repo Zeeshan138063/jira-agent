@@ -47,5 +47,5 @@ class WriteGate:
         }
         private_dir(self.audit_path.parent)
         fd = os.open(self.audit_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
-        with os.fdopen(fd, "a") as f:
+        with os.fdopen(fd, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")

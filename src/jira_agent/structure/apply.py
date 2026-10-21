@@ -18,13 +18,13 @@ def state_path(plan_path: str | Path) -> Path:
 
 def load_state(path: Path) -> dict:
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
         return {"created": {}, "linked": []}
 
 
 def save_state(path: Path, state: dict) -> None:
-    path.write_text(json.dumps(state, indent=2))
+    path.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
 
 def _inherited(node: Node, nodes: dict[str, Node], attr: str):

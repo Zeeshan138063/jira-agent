@@ -66,7 +66,7 @@ class Node:
 
 def load_plan(path: str | Path) -> Plan:
     try:
-        text = Path(path).expanduser().read_text()
+        text = Path(path).expanduser().read_text(encoding="utf-8")
     except FileNotFoundError:
         raise ValueError(f"plan file not found: {path}") from None
     try:

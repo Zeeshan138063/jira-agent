@@ -144,5 +144,5 @@ def write_project_summary(kb: KbStore, project: str) -> Path:
     kb.set_meta(f"stats:{project}", json.dumps(stats))
     path = kb.root / "projects" / f"{project}.md"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_summary(project, stats))
+    path.write_text(render_summary(project, stats), encoding="utf-8")
     return path

@@ -77,7 +77,7 @@ def _load_ticket(args, profile, kb, secrets, http, warnings: list[str]) -> dict:
         raise ValueError("provide --key or --summary")
     description = args.description
     if args.description_file:
-        description = Path(args.description_file).expanduser().read_text()
+        description = Path(args.description_file).expanduser().read_text(encoding="utf-8")
     return {
         "summary": args.summary,
         "description": description or "",
@@ -123,7 +123,9 @@ def run_groom(args, store: ProfileStore, secrets, http) -> int:
                     if args.summary:
                         description = args.description
                         if args.description_file:
-                            description = Path(args.description_file).expanduser().read_text()
+                            description = (
+                                Path(args.description_file).expanduser().read_text(encoding="utf-8")
+                            )
                         found = relevant_epics(
                             kb,
                             {"summary": args.summary, "description": description or ""},

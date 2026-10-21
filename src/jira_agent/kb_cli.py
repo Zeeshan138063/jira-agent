@@ -120,7 +120,7 @@ def _context_draft(args, kb: KbStore) -> tuple[dict, str | None]:
         raise ValueError("provide --summary or --key")
     description = args.description
     if args.description_file:
-        description = Path(args.description_file).expanduser().read_text()
+        description = Path(args.description_file).expanduser().read_text(encoding="utf-8")
     return {
         "summary": args.summary,
         "description": description or "",
@@ -206,7 +206,7 @@ def run_kb(args, store: ProfileStore, secrets, http) -> int:
                     if not path.exists():
                         print(f"error: {key} is not in the knowledge base", file=sys.stderr)
                         return 2
-                    print(path.read_text())
+                    print(path.read_text(encoding="utf-8"))
                 case "context":
                     projects = [args.project.upper()] if args.project else profile.projects
                     draft, exclude = _context_draft(args, kb)
@@ -241,7 +241,7 @@ def run_kb(args, store: ProfileStore, secrets, http) -> int:
                 case "summary":
                     for p in [args.project.upper()] if args.project else profile.projects:
                         path = write_project_summary(kb, p)
-                        print(path.read_text())
+                        print(path.read_text(encoding="utf-8"))
     except (KbError, ValueError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2

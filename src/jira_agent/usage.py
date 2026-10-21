@@ -64,11 +64,11 @@ def record(entry: dict, home: Path | None = None) -> None:
         path = log_path(home)
         private_dir(path.parent)
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
-        with os.fdopen(fd, "a") as f:
+        with os.fdopen(fd, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry) + "\n")
         if path.stat().st_size > TRIM_BYTES:
-            kept = path.read_text().splitlines()[-KEEP_LINES:]
-            path.write_text("\n".join(kept) + "\n")
+            kept = path.read_text(encoding="utf-8").splitlines()[-KEEP_LINES:]
+            path.write_text("\n".join(kept) + "\n", encoding="utf-8")
     except OSError:
         pass
 
@@ -79,7 +79,7 @@ def load_entries(home: Path | None = None, days: int | None = None) -> list[dict
         return []
     cutoff = time.time() - days * 86400 if days else 0
     entries = []
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         try:
             entry = json.loads(line)
         except json.JSONDecodeError:
@@ -138,7 +138,7 @@ def static_costs(plugin_root: Path) -> dict:
     """Tokens the instructions themselves cost when the model loads them (once per session)."""
 
     def size(path: Path) -> int:
-        return estimate_tokens(len(path.read_text())) if path.exists() else 0
+        return estimate_tokens(len(path.read_text(encoding="utf-8"))) if path.exists() else 0
 
     agent = plugin_root / "agents" / "jira-agent.md"
     skills = {p.parent.name: size(p) for p in sorted((plugin_root / "skills").glob("*/SKILL.md"))}

@@ -65,7 +65,9 @@ def run_dedupe(args, store: ProfileStore, secrets, http) -> int:
             else:
                 description = args.description
                 if args.description_file:
-                    description = Path(args.description_file).expanduser().read_text()
+                    description = (
+                        Path(args.description_file).expanduser().read_text(encoding="utf-8")
+                    )
                 draft = draft_from_args(args.summary, description)
             live, warning = (
                 ([], None) if args.no_live else _live(profile, secrets, http, draft, projects)

@@ -91,7 +91,7 @@ def _report(plan, profile, kb, api, offline: bool) -> dict:
 
 def run_structure(args, store: ProfileStore, secrets, http) -> int:
     if args.action == "example":
-        _emit(json.loads(structure_example_path().read_text()))
+        _emit(json.loads(structure_example_path().read_text(encoding="utf-8")))
         return 0
     profile = _profile(store, args.profile)
     try:

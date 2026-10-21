@@ -186,3 +186,27 @@ def test_network_failure_is_a_clean_error_not_a_traceback(tmp_path, capsys):
     respx.get(f"{BASE}/issue/PROJ-1").mock(side_effect=httpx.ConnectError("no route"))
     code = run(["jira", "get", "PROJ-1", "--no-comments"], store, make_secrets())
     assert code == 5 and "network error: ConnectError" in capsys.readouterr().err
+
+
+def test_file_secret_store_roundtrip_and_privacy(tmp_path, monkeypatch):
+    import json
+    import os
+    import stat
+
+    from jira_agent.auth.keychain import FileStore, KeychainStore, default_store
+
+    store = FileStore(tmp_path / "home" / "secrets.json")
+    assert store.get("k") is None
+    store.set("k", {"token": "x", "name": "café"})
+    assert store.get("k") == {"token": "x", "name": "café"}
+    if os.name != "nt":
+        assert stat.S_IMODE(store.path.stat().st_mode) == 0o600
+    store.delete("k")
+    store.delete("missing")
+    assert json.loads(store.path.read_text(encoding="utf-8")) == {}
+
+    monkeypatch.delenv("JIRA_AGENT_SECRETS", raising=False)
+    assert isinstance(default_store(), KeychainStore)
+    monkeypatch.setenv("JIRA_AGENT_SECRETS", "file")
+    monkeypatch.setenv("JIRA_AGENT_HOME", str(tmp_path / "h"))
+    assert isinstance(default_store(), FileStore)
