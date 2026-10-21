@@ -54,6 +54,7 @@ def test_counting_stream_counts_and_forwards(capsys):
     assert hasattr(counted, "isatty")
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX file modes")
 def test_record_writes_a_private_line_and_load_reads_it_back(home):
     usage.record(entry("kb context", 900))
     path = usage.log_path()

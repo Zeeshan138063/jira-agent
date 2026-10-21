@@ -1,4 +1,5 @@
 import json
+import os
 import stat
 import threading
 import time
@@ -114,6 +115,7 @@ def mode(path):
     return stat.S_IMODE(path.stat().st_mode)
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX file modes")
 def test_private_directories_and_files(tmp_path):
     home = tmp_path / "home"
     store = ProfileStore(home)
@@ -128,6 +130,7 @@ def test_private_directories_and_files(tmp_path):
     assert mode(audit) == 0o600
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX file modes")
 def test_existing_directories_keep_their_permissions(tmp_path):
     shared = tmp_path / "shared"
     shared.mkdir(mode=0o755)

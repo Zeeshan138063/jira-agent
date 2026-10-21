@@ -3,11 +3,12 @@ import secrets as _secrets
 import time
 import webbrowser
 from collections.abc import Callable
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 
 import httpx
 
+from jira_agent.auth.callback_server import LocalHTTPServer
 from jira_agent.auth.credentials import METHOD_TOKEN, basic_header
 from jira_agent.auth.keychain import SecretStore, token_key
 
@@ -196,7 +197,7 @@ class _Handler(BaseHTTPRequestHandler):
         pass
 
 
-class TokenFormServer(HTTPServer):
+class TokenFormServer(LocalHTTPServer):
     def __init__(self, site_url: str, verify: Callable[[str, str], dict], port: int = 0):
         super().__init__(("127.0.0.1", port), _Handler)
         self.site_url = site_url

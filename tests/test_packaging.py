@@ -1,6 +1,7 @@
 """The package is what teammates install; these checks stop its metadata from drifting."""
 
 import json
+import os
 import re
 import struct
 import tomllib
@@ -79,7 +80,7 @@ def test_declared_agent_and_skills_exist():
 def test_the_launcher_is_executable_and_runs_through_uv():
     launcher = ROOT / "bin" / "jira-agent"
     text = launcher.read_text()
-    assert text.startswith("#!/bin/sh") and launcher.stat().st_mode & 0o111
+    assert text.startswith("#!/bin/sh") and (os.name == "nt" or launcher.stat().st_mode & 0o111)
     assert "exec uv run" in text and '"$@"' in text
     assert "/Users/" not in text and "/home/" not in text
 
@@ -123,3 +124,8 @@ def test_the_entry_skill_carries_its_metadata_and_support_files():
     for key in ("name: jira", "license: MIT", "argument-hint:", "compatibility:", "metadata:"):
         assert key in head
     assert (skill / "SECURITY.md").is_file() and (skill / "references" / "jql.md").is_file()
+
+
+def test_a_windows_launcher_ships_next_to_the_shell_one():
+    text = (ROOT / "bin" / "jira-agent.cmd").read_text()
+    assert "uv run" in text and "%*" in text

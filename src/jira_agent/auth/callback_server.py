@@ -1,4 +1,6 @@
 import html
+import os
+import socket
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
@@ -46,10 +48,24 @@ class _Handler(BaseHTTPRequestHandler):
         pass
 
 
+class LocalHTTPServer(HTTPServer):
+    """Loopback server that no other local process can share the port with.
+
+    On Windows, SO_REUSEADDR lets a second process bind the same port, so use exclusive mode there.
+    """
+
+    allow_reuse_address = os.name != "nt"
+
+    def server_bind(self):
+        if os.name == "nt":
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
+
+
 class CallbackServer:
     def __init__(self, port: int):
         try:
-            self._server = HTTPServer(("127.0.0.1", port), _Handler)
+            self._server = LocalHTTPServer(("127.0.0.1", port), _Handler)
         except OSError as e:
             raise CallbackError(
                 f"cannot listen on 127.0.0.1:{port} ({e.strerror}); "

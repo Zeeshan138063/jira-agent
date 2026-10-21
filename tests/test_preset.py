@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -180,6 +181,7 @@ def test_import_of_a_broken_file_exits_cleanly(home, tmp_path, content):
     )
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX path /proc")
 def test_import_rejects_an_unwritable_folder(home, tmp_path, capsys):
     preset = tmp_path / "p.json"
     preset.write_text(json.dumps(export_preset(make_profile(tmp_path))))

@@ -1,4 +1,5 @@
 import json
+import os
 import stat
 
 import pytest
@@ -43,6 +44,7 @@ def test_rejects_invalid_values(tmp_path, kw):
         make_profile(tmp_path, **kw)
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX file modes")
 def test_round_trip_and_private_file_mode(store, tmp_path):
     p = make_profile(tmp_path)
     path = store.save(p)
@@ -93,6 +95,7 @@ def test_overrides_do_not_mutate_saved_profile(store, tmp_path):
     assert store.get("proj").write_mode == "confirm_each"
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX file modes")
 def test_check_local_flags_unwritable_kb(tmp_path):
     p = make_profile(tmp_path, kb_path="/proc/nope/kb")
     assert check_local(p)
