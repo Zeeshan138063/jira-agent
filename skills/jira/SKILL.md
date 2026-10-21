@@ -1,6 +1,13 @@
 ---
 name: jira
 description: Create, groom and de-duplicate Jira Cloud tickets, turn a spec into epics and stories, and search a local knowledge base of existing tickets, via a CLI that talks to Jira's REST API directly (no MCP). Use for "create a ticket", "groom PROJ-123", "is there already a ticket for this", "break this requirement into stories", or "sync our Jira tickets". Start here; it installs the CLI if needed and routes to the other jira-* skills.
+license: MIT
+user-invocable: true
+argument-hint: "[create|groom|check duplicates|plan epics|sync] [ticket key or description]"
+compatibility: "Requires uv (https://docs.astral.sh/uv/) and a Jira Cloud site; signs in with an Atlassian API token"
+metadata:
+  authors: "Zeeshan Muhammad"
+  repository: "https://github.com/Zeeshan138063/jira-agent"
 ---
 
 # jira
@@ -22,6 +29,11 @@ uv tool install git+https://github.com/Zeeshan138063/jira-agent
 If this skill came from a fork, use that fork's URL instead. If `uv` is missing, ask the user to
 install it first; do not install system tools yourself. To update later:
 `uv tool upgrade jira-agent`.
+
+## More
+
+- `references/jql.md`: JQL cheat sheet for `jira-agent jira search`.
+- `SECURITY.md`: what is stored where and what the skill will and will not do.
 
 ## Running the CLI
 

@@ -115,3 +115,11 @@ def test_docs_for_installing_and_releasing_exist_and_are_linked():
     for doc in ("INSTALL.md", "RELEASING.md", "PM_GUIDE.md", "TEAM_SETUP.md", "TOKEN_USAGE.md"):
         assert (ROOT / "docs" / doc).is_file() and f"docs/{doc}" in readme
     assert "claude plugin install jira-agent --marketplace" in readme
+
+
+def test_the_entry_skill_carries_its_metadata_and_support_files():
+    skill = ROOT / "skills" / "jira"
+    head = (skill / "SKILL.md").read_text().split("---")[1]
+    for key in ("name: jira", "license: MIT", "argument-hint:", "compatibility:", "metadata:"):
+        assert key in head
+    assert (skill / "SECURITY.md").is_file() and (skill / "references" / "jql.md").is_file()

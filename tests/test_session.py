@@ -156,7 +156,9 @@ def test_agent_file_is_well_formed_and_routes_every_skill():
 def test_every_skill_has_frontmatter_matching_its_folder():
     for skill in (ROOT / "skills").iterdir():
         body = (skill / "SKILL.md").read_text()
-        front = re.match(r"---\nname: (.+)\ndescription: (.+)\n---\n", body)
+        front = re.match(
+            r"---\nname: (.+)\ndescription: (.+)\n(?:[^\n]+\n|[ \t]+[^\n]*\n)*---\n", body
+        )
         assert front and front.group(1) == skill.name, skill.name
 
 
