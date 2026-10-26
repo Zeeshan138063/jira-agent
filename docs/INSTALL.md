@@ -8,6 +8,27 @@
 - **macOS** (sign-in tokens use the system Keychain). Other systems are not tested.
 - A Jira Cloud account. Network access once, to download the plugin's Python packages on first use.
 
+## Install with one line (non-technical teammates)
+
+`install/install.sh` (macOS, Linux) and `install/install.ps1` (Windows) do everything: install Claude
+Code and `uv` if missing (and Git on Windows), install or update the plugin, save the team's Jira site
+and projects as a preset, allow `jira-agent` commands, and put a **Jira Agent** shortcut on the Desktop.
+Running it again updates the plugin. Replace the site and project keys before sending.
+
+macOS / Linux (Terminal):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Zeeshan138063/jira-agent/main/install/install.sh | bash -s -- --site https://yoursite.atlassian.net --projects KEY1,KEY2
+```
+
+Windows (PowerShell):
+
+```powershell
+$env:JIRA_SITE="https://yoursite.atlassian.net"; $env:JIRA_PROJECTS="KEY1,KEY2"; irm https://raw.githubusercontent.com/Zeeshan138063/jira-agent/main/install/install.ps1 | iex
+```
+
+Then double-click **Jira Agent** on the Desktop. First run: sign in to Claude, then connect Jira.
+
 ## Install (teammates)
 
 Ask your admin for the **marketplace source** (see [Hosting](#hosting-admin) below), then:
